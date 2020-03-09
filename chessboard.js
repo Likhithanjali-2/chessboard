@@ -8,25 +8,25 @@ function moveTowardsDirection(direction, pos, step, boardLength) {
     case "N":
       if (pos["x_cordinate"] - step >= 0) {
         pos["x_cordinate"] -= step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "E":
       if (pos["y_cordinate"] + step < boardLength) {
         pos["y_cordinate"] += step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "S":
       if (pos["x_cordinate"] + step < boardLength) {
         pos["x_cordinate"] += step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "W":
       if (pos["y_cordinate"] - step >= 0) {
         pos["y_cordinate"] -= step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "NE":
@@ -36,14 +36,14 @@ function moveTowardsDirection(direction, pos, step, boardLength) {
       ) {
         pos["y_cordinate"] += step;
         pos["x_cordinate"] -= step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "NW":
       if (pos["y_cordinate"] - step >= 0 && pos["x_cordinate"] - step >= 0) {
         pos["y_cordinate"] -= step;
         pos["x_cordinate"] -= step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "SE":
@@ -53,7 +53,7 @@ function moveTowardsDirection(direction, pos, step, boardLength) {
       ) {
         pos["y_cordinate"] += step;
         pos["x_cordinate"] += step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     case "SW":
@@ -63,12 +63,16 @@ function moveTowardsDirection(direction, pos, step, boardLength) {
       ) {
         pos["y_cordinate"] -= step;
         pos["x_cordinate"] += step;
-      } else console.log("Queen reached to the end of the board");
+      } else reachedEnd();
       break;
 
     default:
       console.log("Invalid Direction");
   }
+}
+
+function reachedEnd() {
+  console.log("Queen reached to the end of the board");
 }
 
 function isNewPosition(arr, element) {
@@ -79,12 +83,8 @@ function isNewPosition(arr, element) {
 }
 
 function trackThePosAndUpdate(queenPos, whereAbouts, board) {
-  queenStatus =
-    board[queenPos["x_cordinate"]][
-      queenPos["y_cordinate"]
-    ];
-  if (isNewPosition(whereAbouts, queenStatus))
-    whereAbouts.push(queenStatus);
+  queenStatus = board[queenPos["x_cordinate"]][queenPos["y_cordinate"]];
+  if (isNewPosition(whereAbouts, queenStatus)) whereAbouts.push(queenStatus);
 }
 
 function init() {
@@ -120,8 +120,8 @@ function takeInputFromUser() {
 
 function main() {
   var ui, direction, noOfSteps;
-  var userInput = takeInputFromUser() //["E1", "N2", "S3", "W2", "NE2", "SE2", "NW2", "SW2"];
-  board, queen = init();
+  var userInput = takeInputFromUser(); //["E1", "N2", "S3", "W2", "NE2", "SE2", "NW2", "SW2"];
+  board, (queen = init());
 
   for (var i = 0; i < userInput.length - 1; i++) {
     ui = userInput[i];
@@ -129,10 +129,20 @@ function main() {
     noOfSteps = Number(ui.slice(ui.length - 1));
 
     changeTheDirection(direction, queen);
-    moveTowardsDirection(queen["direction"], queen['current_position'], noOfSteps, board.length);
-    trackThePosAndUpdate(queen["current_position"], queen['whereAbouts'], board);
+    moveTowardsDirection(
+      queen["direction"],
+      queen["current_position"],
+      noOfSteps,
+      board.length
+    );
+    trackThePosAndUpdate(
+      queen["current_position"],
+      queen["whereAbouts"],
+      board
+    );
   }
   console.log(queen);
   return;
 }
+
 main();
